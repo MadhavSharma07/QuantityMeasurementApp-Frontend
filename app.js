@@ -1,4 +1,4 @@
-const BASE = 'http://localhost:8080';
+const BASE = 'http://localhost:3000/api';
 let JWT_TOKEN = '';
 let CURRENT_USER = '';
 
