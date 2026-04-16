@@ -30,7 +30,7 @@ quantity-measurement-frontend/
 
 ⚙️ Getting Started
 1. Clone the Repository
-git clone https://github.com/your-username/quantity-measurement-frontend.git
+git clone https://github.com/MadhavSharma07/quantity-measurement-frontend.git
 2. Open Project
 Navigate to the folder
 Open index.html in your browser
