@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Quantity Measurement App</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ════════════════ AUTH PAGE ════════════════ -->
+<div id="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">⚗ QMeasure</div>
+    <div class="auth-sub">Quantity Measurement System</div>
+
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+      <button class="tab-btn" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="login-form">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="login-username" placeholder="Enter username"/>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="Enter password"/>
+      </div>
+      <button class="btn" id="login-btn" onclick="doLogin()">Login</button>
+      <div class="msg" id="login-msg"></div>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="register-form" style="display:none">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="reg-username" placeholder="Choose username"/>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="reg-password" placeholder="Choose password"/>
+      </div>
+      <button class="btn" id="reg-btn" onclick="doRegister()">Create Account</button>
+      <div class="msg" id="reg-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ MAIN APP ════════════════ -->
+<div id="app-page">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">⚗ QMeasure</div>
+    <div class="user-chip">
+      <div class="user-avatar" id="user-avatar">U</div>
+      <span class="user-name" id="user-display">user</span>
+      <button class="logout-btn" onclick="doLogout()">logout</button>
+    </div>
+  </div>
+
+  <div class="main-layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Operations</div>
+        <div class="nav-item active" onclick="showPage('add', this)">
+          <span class="nav-icon">➕</span> Add
+        </div>
+        <div class="nav-item" onclick="showPage('subtract', this)">
+          <span class="nav-icon">➖</span> Subtract
+        </div>
+        <div class="nav-item" onclick="showPage('compare', this)">
+          <span class="nav-icon">⚖</span> Compare
+        </div>
+        <div class="nav-item" onclick="showPage('convert', this)">
+          <span class="nav-icon">🔄</span> Convert
+        </div>
+        <div class="nav-item" onclick="showPage('divide', this)">
+          <span class="nav-icon">➗</span> Divide
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">History</div>
+        <div class="nav-item" onclick="showPage('history', this)">
+          <span class="nav-icon">📋</span> By Operation
+        </div>
+        <div class="nav-item" onclick="showPage('history-type', this)">
+          <span class="nav-icon">📐</span> By Type
+        </div>
+        <div class="nav-item" onclick="showPage('errored', this)">
+          <span class="nav-icon">⚠</span> Errors
+        </div>
+        <div class="nav-item" onclick="showPage('count', this)">
+          <span class="nav-icon">🔢</span> Count
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ADD -->
+      <div class="page active" id="page-add">
+        <div class="page-title">Add Quantities</div>
+        <div class="page-desc">Add two quantities of the same measurement type</div>
+        <div class="op-card">
+          <div class="qty-grid">
+            <div class="qty-block">
+              <div class="qty-block-title">First Quantity</div>
+              <div class="form-group"><label>Value</label><input type="number" id="add-v1" placeholder="0.0"/></div>
+              <div class="form-group"><label>Type</label><select id="add-t1" onchange="updateUnits('add-t1','add-u1')"><option value="">Select type</option></select></div>
+              <div class="form-group"><label>Unit</label><select id="add-u1"><option value="">Select unit</option></select></div>
+            </div>
+            <div class="qty-block">
+              <div class="qty-block-title">Second Quantity</div>
+              <div class="form-group"><label>Value</label><input type="number" id="add-v2" placeholder="0.0"/></div>
+              <div class="form-group"><label>Type</label><select id="add-t2" onchange="updateUnits('add-t2','add-u2')"><option value="">Select type</option></select></div>
+              <div class="form-group"><label>Unit</label><select id="add-u2"><option value="">Select unit</option></select></div>
+            </div>
+          </div>
+          <button class="btn" id="add-btn" onclick="doOperation('add')">Calculate Addition</button>
+          <div class="result-box" id="add-result"></div>
+        </div>
+      </div>
+
+      <!-- SUBTRACT -->
+      <div class="page" id="page-subtract">
+        <div class="page-title">Subtract Quantities</div>
+        <div class="page-desc">Subtract one quantity from another</div>
+        <div class="op-card">
+          <div class="qty-grid">
+            <div class="qty-block">
+              <div class="qty-block-title">First Quantity</div>
+              <div class="form-group"><label>Value</label><input type="number" id="sub-v1" placeholder="0.0"/></div>
+              <div class="form-group"><label>Type</label><select id="sub-t1" onchange="updateUnits('sub-t1','sub-u1')"><option value="">Select type</option></select></div>
+              <div class="form-group"><label>Unit</label><select id="sub-u1"><option value="">Select unit</option></select></div>
+            </div>
+            <div class="qty-block">
+              <div class="qty-block-title">Second Quantity</div>
+              <div class="form-group"><label>Value</label><input type="number" id="sub-v2" placeholder="0.0"/></div>
+              <div class="form-group"><label>Type</label><select id="sub-t2" onchange="updateUnits('sub-t2','sub-u2')"><option value="">Select type</option></select></div>
+              <div class="form-group"><label>Unit</label><select id="sub-u2"><option value="">Select unit</option></select></div>
+            </div>
+          </div>
+          <button class="btn" id="sub-btn" onclick="doOperation('subtract')">Calculate Subtraction</button>
+          <div class="result-box" id="sub-result"></div>
+        </div>
+      </div>
+
+      <!-- COMPARE -->
+      <div class="page" id="page-compare">
+        <div class="page-title">Compare Quantities</div>
+        <div class="page-desc">Check if two quantities are equal</div>
+        <div class="op-card">
+          <div class="qty-grid">
+            <div class="qty-block">
+              <div class="qty-block-title">First Quantity</div>
+              <div class="form-group"><label>Value</label><input type="number" id="cmp-v1" placeholder="0.0"/></div>
+              <div class="form-group"><label>Type</label><select id="cmp-t1" onchange="updateUnits('cmp-t1','cmp-u1')"><option value="">Select type</option></select></div>
+              <div class="form-group"><label>Unit</label><select id="cmp-u1"><option value="">Select unit</option></select></div>
+            </div>
+            <div class="qty-block">
+              <div class="qty-block-title">Second Quantity</div>
+              <div class="form-group"><label>Value</label><input type="number" id="cmp-v2" placeholder="0.0"/></div>
+              <div class="form-group"><label>Type</label><select id="cmp-t2" onchange="updateUnits('cmp-t2','cmp-u2')"><option value="">Select type</option></select></div>
+              <div class="form-group"><label>Unit</label><select id="cmp-u2"><option value="">Select unit</option></select></div>
+            </div>
+          </div>
+          <button class="btn" id="cmp-btn" onclick="doOperation('compare')">Compare</button>
+          <div class="result-box" id="cmp-result"></div>
+        </div>
+      </div>
+
+      <!-- CONVERT -->
+      <div class="page" id="page-convert">
+        <div class="page-title">Convert Quantity</div>
+        <div class="page-desc">Convert a quantity from one unit to another</div>
+        <div class="op-card">
+          <div class="qty-grid">
+            <div class="qty-block">
+              <div class="qty-block-title">From</div>
+              <div class="form-group"><label>Value</label><input type="number" id="cvt-v1" placeholder="0.0"/></div>
+              <div class="form-group"><label>Type</label><select id="cvt-t1" onchange="updateUnits('cvt-t1','cvt-u1'); updateUnits('cvt-t1','cvt-u2')"><option value="">Select type</option></select></div>
+              <div class="form-group"><label>Unit</label><select id="cvt-u1"><option value="">Select unit</option></select></div>
+            </div>
+            <div class="qty-block">
+              <div class="qty-block-title">To</div>
+              <div class="form-group"><label>Result</label><input type="number" id="cvt-v2" value="0" readonly class="readonly-input"/></div>
+              <div class="form-group"><label>Type</label><select id="cvt-t2" onchange="updateUnits('cvt-t2','cvt-u2')"><option value="">Select type</option></select></div>
+              <div class="form-group"><label>Unit</label><select id="cvt-u2"><option value="">Select unit</option></select></div>
+            </div>
+          </div>
+          <button class="btn" id="cvt-btn" onclick="doOperation('convert')">Convert</button>
+          <div class="result-box" id="cvt-result"></div>
+        </div>
+      </div>
+
+      <!-- DIVIDE -->
+      <div class="page" id="page-divide">
+        <div class="page-title">Divide Quantities</div>
+        <div class="page-desc">Get the ratio between two quantities</div>
+        <div class="op-card">
+          <div class="qty-grid">
+            <div class="qty-block">
+              <div class="qty-block-title">Dividend</div>
+              <div class="form-group"><label>Value</label><input type="number" id="div-v1" placeholder="0.0"/></div>
+              <div class="form-group"><label>Type</label><select id="div-t1" onchange="updateUnits('div-t1','div-u1')"><option value="">Select type</option></select></div>
+              <div class="form-group"><label>Unit</label><select id="div-u1"><option value="">Select unit</option></select></div>
+            </div>
+            <div class="qty-block">
+              <div class="qty-block-title">Divisor</div>
+              <div class="form-group"><label>Value</label><input type="number" id="div-v2" placeholder="0.0"/></div>
+              <div class="form-group"><label>Type</label><select id="div-t2" onchange="updateUnits('div-t2','div-u2')"><option value="">Select type</option></select></div>
+              <div class="form-group"><label>Unit</label><select id="div-u2"><option value="">Select unit</option></select></div>
+            </div>
+          </div>
+          <button class="btn" id="div-btn" onclick="doOperation('divide')">Calculate Ratio</button>
+          <div class="result-box" id="div-result"></div>
+        </div>
+      </div>
+
+      <!-- HISTORY BY OPERATION -->
+      <div class="page" id="page-history">
+        <div class="page-title">History by Operation</div>
+        <div class="page-desc">View past calculations filtered by operation type</div>
+        <div class="filter-row">
+          <select id="hist-op-filter">
+            <option value="add">Add</option>
+            <option value="subtract">Subtract</option>
+            <option value="compare">Compare</option>
+            <option value="convert">Convert</option>
+            <option value="divide">Divide</option>
+          </select>
+          <button class="btn filter-btn" onclick="loadHistoryByOp()">Fetch</button>
+        </div>
+        <div id="hist-op-result"></div>
+      </div>
+
+      <!-- HISTORY BY TYPE -->
+      <div class="page" id="page-history-type">
+        <div class="page-title">History by Type</div>
+        <div class="page-desc">View past calculations filtered by measurement type</div>
+        <div class="filter-row">
+          <select id="hist-type-filter">
+            <option value="LengthUnit">Length</option>
+            <option value="WeightUnit">Weight</option>
+            <option value="VolumeUnit">Volume</option>
+            <option value="TemperatureUnit">Temperature</option>
+          </select>
+          <button class="btn filter-btn" onclick="loadHistoryByType()">Fetch</button>
+        </div>
+        <div id="hist-type-result"></div>
+      </div>
+
+      <!-- ERRORED -->
+      <div class="page" id="page-errored">
+        <div class="page-title">Error History</div>
+        <div class="page-desc">All failed calculations</div>
+        <button class="btn load-btn" onclick="loadErrored()">Load Errors</button>
+        <div id="errored-result"></div>
+      </div>
+
+      <!-- COUNT -->
+      <div class="page" id="page-count">
+        <div class="page-title">Operation Counts</div>
+        <div class="page-desc">Number of successful operations by type</div>
+        <button class="btn load-btn" onclick="loadCounts()">Load Counts</button>
+        <div class="count-grid" id="count-grid"></div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main-layout -->
+</div><!-- /app-page -->
+
+<script src="app.js"></script>
+</body>
+</html>
